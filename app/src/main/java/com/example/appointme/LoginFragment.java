@@ -19,7 +19,7 @@ public class LoginFragment extends Fragment {
 
     View view;
 
-    Button SignUpBtn;
+    Button signUpBtn;
     Button signInBtn;
     Button forgotPass;
     EditText email;
@@ -32,9 +32,16 @@ public class LoginFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_login, container, false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
 
-        signInBtn = view.findViewById(R.id.signin_login_btn);
-        email = view.findViewById(R.id.signin_email_input);
-        password = view.findViewById(R.id.signin_password_input);
+        signUpBtn = view.findViewById(R.id.signin_signup_btn);
+        signUpBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_login_to_signUp);
+            }
+        });
+        signInBtn = view.findViewById(R.id.signup_confirm_btn);
+        email = view.findViewById(R.id.signup_email_input);
+        password = view.findViewById(R.id.signup_password_input);
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,8 +54,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onComplete(boolean result) {
                             if (result) {
-                                //Navigation.findNavController(view).navigate(R.id.action_signin_to_mainFeed);
-                                Toast.makeText(getActivity(), "Success to login", Toast.LENGTH_SHORT).show();
+                                Navigation.findNavController(view).navigate(R.id.action_login_to_signUp);
                             } else {
                                 Toast.makeText(getActivity(), "Failed to login", Toast.LENGTH_SHORT).show();
                             }

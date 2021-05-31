@@ -8,17 +8,21 @@ import androidx.annotation.NonNull;
 
 import com.example.appointme.model.User.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import static android.content.ContentValues.TAG;
 
 public class FireBaseModel {
 
     public FirebaseAuth mAuth= FirebaseAuth.getInstance();
+    public FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     public FirebaseUser getCurrentUser(){
         return mAuth.getCurrentUser();
@@ -62,7 +66,7 @@ public class FireBaseModel {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             user.setId(mAuth.getCurrentUser().getUid());
-                            //Model.instance.addUser(user,()->{ });
+                            Model.instance.addUser(user,()->{ });
                             Toast.makeText(activity, "User Created Successfully", Toast.LENGTH_SHORT).show();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -92,7 +96,22 @@ public class FireBaseModel {
                 });
     }
 
-    //public FirebaseStorage storage = FirebaseStorage.getInstance();
-    //public FirebaseFirestore db = FirebaseFirestore.getInstance();
+    public void addUser(User user, final Model.AddUserListener listener) {
+        db.collection("Users").document(user.getId())
+                .set(user.toMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("TAG","User added successfully");
+                listener.onComplete();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("TAG","fail adding User");
+                listener.onComplete();
+            }
+        });
+    }
+
 
 }

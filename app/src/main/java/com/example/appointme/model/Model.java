@@ -11,6 +11,14 @@ public class Model {
     public final static Model instance = new Model();
     FireBaseModel fireBase = new FireBaseModel();
 
+    public interface SuccessListener{
+        void onComplete(boolean result);
+    }
+
+    public interface AddUserListener {
+        void onComplete();
+    }
+
     public void setActivity(Activity activity){
         this.mActivity = activity;
     }
@@ -31,12 +39,15 @@ public class Model {
         fireBase.signOutFromFireBase();
     }
 
-    public void addUser(){
-
+    public void addUser(final User user, final AddUserListener listener){
+        fireBase.addUser(user, new AddUserListener() {
+            @Override
+            public void onComplete() {
+                listener.onComplete();
+            }
+        });
     }
 
-    public interface SuccessListener{
-        void onComplete(boolean result);
-    }
+
 
 }
