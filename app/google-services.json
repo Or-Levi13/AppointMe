@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "12273410367",
+    "project_id": "appointme-fc5bb",
+    "storage_bucket": "appointme-fc5bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12273410367:android:09d2ce7b63e95d3720b38a",
+        "android_client_info": {
+          "package_name": "com.example.appointme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12273410367-u1854u59kiisbhuj0sgoh8vngp9i8us3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnaIa9YXr6HZzaSvAyzAjCHsHTgskmTZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12273410367-u1854u59kiisbhuj0sgoh8vngp9i8us3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
