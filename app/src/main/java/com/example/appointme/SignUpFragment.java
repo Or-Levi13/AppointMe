@@ -45,6 +45,13 @@ public class SignUpFragment extends Fragment {
         signUpBtn = view.findViewById(R.id.signup_confirm_btn);
         fullName = view.findViewById(R.id.signup_name_input);
 
+        signInBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(view).navigate(R.id.action_signUp_to_login);
+            }
+        });
+
         String[] types = new String[]{"Select Entry Type", "Patient", "Doctor"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, types);
         userType.setAdapter(adapter);
