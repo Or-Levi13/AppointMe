@@ -54,7 +54,18 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onComplete(boolean result) {
                             if (result) {
-                                Navigation.findNavController(view).navigate(R.id.action_login_to_signUp);
+                                String userId = Model.instance.getUserId();
+                                Model.instance.getUserType(userId, new Model.StringListener() {
+                                    @Override
+                                    public void onComplete(String data) {
+                                        if (data.equals("Doctor")){
+                                            Navigation.findNavController(view).navigate(R.id.action_login_to_doctorMain);
+                                        }
+                                        if (data.equals("Patient")){
+                                            Navigation.findNavController(view).navigate(R.id.action_login_to_patientMain);
+                                        }
+                                    }
+                                });
                             } else {
                                 Toast.makeText(getActivity(), "Failed to login", Toast.LENGTH_SHORT).show();
                             }

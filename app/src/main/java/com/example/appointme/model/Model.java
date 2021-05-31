@@ -19,6 +19,10 @@ public class Model {
         void onComplete();
     }
 
+    public interface StringListener {
+        void onComplete(String data);
+    }
+
     public void setActivity(Activity activity){
         this.mActivity = activity;
     }
@@ -35,6 +39,10 @@ public class Model {
         fireBase.logInToFireBase(email,password,mActivity, listener);
     }
 
+    public String getUserId(){
+        return fireBase.getId();
+    }
+
     public void signOutFB(){
         fireBase.signOutFromFireBase();
     }
@@ -48,6 +56,9 @@ public class Model {
         });
     }
 
+    public void getUserType(String userId, StringListener listener){
+        fireBase.getUserType(userId,listener);
+    }
 
 
 }

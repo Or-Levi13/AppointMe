@@ -13,8 +13,11 @@
             android:id="@+id/action_login_to_signUp"
             app:destination="@id/signUpFragment" />
         <action
-            android:id="@+id/action_login_to_mainPage"
-            app:destination="@id/mainPageFragment" />
+            android:id="@+id/action_login_to_doctorMain"
+            app:destination="@id/doctorMainFragment" />
+        <action
+            android:id="@+id/action_login_to_patientMain"
+            app:destination="@id/patientMainFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -24,14 +27,16 @@
         <action
             android:id="@+id/action_signUp_to_login"
             app:destination="@id/loginFragment" />
-        <action
-            android:id="@+id/action_signUp_to_mainPage"
-            app:destination="@id/mainPageFragment" />
     </fragment>
     <fragment
-        android:id="@+id/mainPageFragment"
-        android:name="com.example.appointme.MainPageFragment"
-        android:label="fragment_main_page"
-        tools:layout="@layout/fragment_main_page" />
+        android:id="@+id/doctorMainFragment"
+        android:name="com.example.appointme.DoctorMainFragment"
+        android:label="fragment_doctor_main"
+        tools:layout="@layout/fragment_doctor_main" />
+    <fragment
+        android:id="@+id/patientMainFragment"
+        android:name="com.example.appointme.PatientMainFragment"
+        android:label="fragment_patient_main"
+        tools:layout="@layout/fragment_patient_main" />
 </navigation>
 

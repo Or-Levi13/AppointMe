@@ -65,7 +65,7 @@ public class SignUpFragment extends Fragment {
                 }else{
                     User user = new User(user_email,user_name,user_type);
                     Model.instance.signUpFB(user,user_pass);
-                    Navigation.findNavController(view).navigate(R.id.action_signUp_to_mainPage);
+                    Navigation.findNavController(view).navigate(R.id.action_signUp_to_login);
                 }
 
             }});
