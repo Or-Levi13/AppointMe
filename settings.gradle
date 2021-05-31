@@ -1,0 +1,2 @@
+rootProject.name = "AppointMe"
+include ':app'
