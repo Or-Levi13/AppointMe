@@ -19,7 +19,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -52,12 +54,14 @@ public class FireBaseModel {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
+                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                            Date date = new Date();
                             DocumentSnapshot doc = task.getResult();
                             String email = doc.getString("email");
                             String fullName = doc.getString("fullName");
                             String id = doc.getString("id");
                             boolean isWaiting = doc.getBoolean("isWaiting"); //*//
-                            String lastUpdate = doc.getString("lastUpdated");
+                            String lastUpdate = formatter.format(date);
                             String type = doc.getString("type");
                             Patient patient = new Patient(email, fullName, type);
                             patient.setId(id);
@@ -211,7 +215,6 @@ public class FireBaseModel {
                             Doctor doctor = new Doctor();
                             doctor.fromMap(doc.getData());
                             doctorList.add(doctor);
-                            //Log.d("TAG","game: " + game.getId());
                         }
                     }
                 }
@@ -231,7 +234,6 @@ public class FireBaseModel {
                             Patient patient = new Patient();
                             patient.fromMap(doc.getData());
                             patientsList.add(patient);
-                            //Log.d("TAG","game: " + game.getId());
                         }
                     }
                 }

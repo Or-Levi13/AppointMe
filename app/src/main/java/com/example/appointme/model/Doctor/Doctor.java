@@ -23,7 +23,7 @@ public class Doctor extends User {
     Date date = new Date();
     String updateTime = formatter.format(date);
 
-    List<Patient> patientList = new ArrayList<>();
+    List<Patient> patientList;
     private String isAvailable;
 
     public Doctor(){
@@ -36,6 +36,7 @@ public class Doctor extends User {
         this.type = type;
         this.fullName = fullName;
         this.isAvailable = "true";
+        patientList = new ArrayList<>();
     }
 
     public Map<String, Object> toMap() {
@@ -47,6 +48,7 @@ public class Doctor extends User {
         result.put("type", getType());
         result.put("lastUpdated", updateTime);
         result.put("isAvailable", isAvailable());
+        result.put("waitingPatients", patientList);
         return result;
     }
 
