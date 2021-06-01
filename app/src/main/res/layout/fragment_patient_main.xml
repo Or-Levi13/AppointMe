@@ -57,14 +57,30 @@
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/patient_main_rv"
-            android:layout_width="383dp"
-            android:layout_height="537dp"
-            android:layout_marginBottom="32dp"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/patients_refresh_layout"
+            android:layout_width="0dp"
+            android:layout_height="491dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/patient_main_rv"
+                android:layout_width="383dp"
+                android:layout_height="537dp"
+                android:layout_marginBottom="32dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

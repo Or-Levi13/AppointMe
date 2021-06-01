@@ -37,7 +37,7 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorHold
     @NonNull
     @Override
     public DoctorHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.doctors_list_row, parent, false);
         DoctorHolder holder = new DoctorHolder(view);
         return holder;
     }
@@ -65,13 +65,17 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorHold
         TextView doctorText;
         TextView doctorSubText;
         ImageView Image;
+        ImageView available;
+        ImageView not_available;
         int position;
 
         public DoctorHolder(@NonNull View itemView) {
             super(itemView);
-            Image = itemView.findViewById(R.id.patient_img_listrow);
-            doctorText = itemView.findViewById(R.id.patient_title_listrow);
-            doctorSubText = itemView.findViewById(R.id.patient_sub_listrow);
+            Image = itemView.findViewById(R.id.doctors_img_listrow);
+            doctorText = itemView.findViewById(R.id.doctors_title_listrow);
+            doctorSubText = itemView.findViewById(R.id.doctors_sub_listrow);
+            available = itemView.findViewById(R.id.doctors_online_listrow);
+            not_available = itemView.findViewById(R.id.doctors_busy_listrow);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,9 +92,13 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorHold
             doctorText.setText(doctor.getFullName());
             doctorSubText.setText(doctor.getEmail());
             Image.setImageResource(R.drawable.logo);
-            /*if (patient.getImageURL() != null) {
-                Picasso.get().load(patient.getImageURL()).placeholder(R.drawable.gamechangersimple).into(gameImage);
-            }*/
+            if (doctor.isAvailable().equals("true")){
+                available.setVisibility(View.VISIBLE);
+                not_available.setVisibility(View.INVISIBLE);
+            }else{
+                available.setVisibility(View.INVISIBLE);
+                not_available.setVisibility(View.VISIBLE);
+            }
 
             this.position = position;
         }

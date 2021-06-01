@@ -69,9 +69,9 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
         public PatientHolder(@NonNull View itemView) {
             super(itemView);
-            Image = itemView.findViewById(R.id.patient_img_listrow);
-            patientText = itemView.findViewById(R.id.patient_title_listrow);
-            patientSubText = itemView.findViewById(R.id.patient_sub_listrow);
+            Image = itemView.findViewById(R.id.main_img_listrow);
+            patientText = itemView.findViewById(R.id.main_title_listrow);
+            patientSubText = itemView.findViewById(R.id.main_sub_listrow);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

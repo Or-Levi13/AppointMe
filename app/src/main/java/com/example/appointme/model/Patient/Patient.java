@@ -3,6 +3,8 @@ package com.example.appointme.model.Patient;
 import com.example.appointme.model.User.User;
 import com.google.firebase.firestore.FieldValue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -13,6 +15,11 @@ public class Patient extends User {
     private String email;
     private String type;
     private String fullName;
+    private boolean isWaiting;
+
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    Date date = new Date();
+    private String arrivalTime;
 
     public Patient(){
         super();
@@ -20,15 +27,21 @@ public class Patient extends User {
 
     public Patient(String email,String fullName, String type) {
         super(email,fullName,type);
+        this.email = email;
+        this.type = type;
+        this.fullName = fullName;
+        isWaiting = true;
     }
 
     public Map<String, Object> toMap() {
+
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);
         result.put("fullName", getFullName());
         result.put("email", getEmail());
         result.put("type", getType());
-        result.put("lastUpdated", FieldValue.serverTimestamp());
+        result.put("lastUpdated", formatter.format(date));
+        result.put("isWaiting", isWaiting());
         return result;
     }
 
@@ -77,5 +90,21 @@ public class Patient extends User {
     @Override
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public boolean isWaiting() {
+        return isWaiting;
+    }
+
+    public void setWaiting(boolean waiting) {
+        isWaiting = waiting;
+    }
+
+    public String getArrivalTime() {
+        return arrivalTime;
+    }
+
+    public void setArrivalTime(String arrivalTime) {
+        this.arrivalTime = arrivalTime;
     }
 }

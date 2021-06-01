@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,8 @@ public class DoctorMainFragment extends Fragment {
     List<Patient> patients = new ArrayList<>();
     ProgressBar pb;
     ImageView logout;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +66,27 @@ public class DoctorMainFragment extends Fragment {
                 patients = patientsList;
                 patientAdapter.setPatientsData(patients);
                 pb.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        swipeRefreshLayout = view.findViewById(R.id.doctors_refresh_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.design_default_color_primary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                Model.instance.showAllPatients(new Model.ListListener<Patient>() {
+                    @Override
+                    public void onComplete(List<Patient> patientList) {
+                        patientAdapter.setPatientsData(patientList);
+                        doctors_rv.setAdapter(patientAdapter);
+                    }
+                });
+
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 

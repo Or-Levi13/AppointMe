@@ -4,7 +4,9 @@ import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
 import com.google.firebase.firestore.FieldValue;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +19,12 @@ public class Doctor extends User {
     private String type;
     private String fullName;
 
+    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    Date date = new Date();
+    String updateTime = formatter.format(date);
+
     List<Patient> patientList = new ArrayList<>();
-    boolean isAvailable = false;
+    private String isAvailable;
 
     public Doctor(){
         super();
@@ -26,15 +32,20 @@ public class Doctor extends User {
 
     public Doctor(String email, String fullName, String type) {
         super(email, fullName, type);
+        this.email = email;
+        this.type = type;
+        this.fullName = fullName;
+        this.isAvailable = "true";
     }
 
     public Map<String, Object> toMap() {
+
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", getId());
         result.put("fullName", getFullName());
         result.put("email", getEmail());
         result.put("type", getType());
-        result.put("lastUpdated", FieldValue.serverTimestamp());
+        result.put("lastUpdated", updateTime);
         result.put("isAvailable", isAvailable());
         return result;
     }
@@ -44,14 +55,23 @@ public class Doctor extends User {
         fullName = (String)map.get("fullName");
         email = (String)map.get("email");
         type = (String)map.get("type");
+        isAvailable = map.get("isAvailable").toString();
     }
 
     public List<Patient> getPatientList() {
         return patientList;
     }
 
-    public boolean isAvailable() {
+    public void setPatientList(List<Patient> patientList) {
+        this.patientList = patientList;
+    }
+
+    public String isAvailable() {
         return isAvailable;
+    }
+
+    public void setAvailable(String available) {
+        isAvailable = available;
     }
 
     @Override

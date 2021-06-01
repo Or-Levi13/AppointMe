@@ -72,14 +72,14 @@ public class SignUpFragment extends Fragment {
                 if (!user_pass.equals(user_repass)) {
                     Toast.makeText(getActivity(),"Please Re-enter the correct Password",Toast.LENGTH_SHORT).show();
                 }else{
-                    User user = new User();
                     if (user_type.equals("Doctor")){
-                        user = new Doctor(user_email,user_name,user_type);
+                        Doctor doctor = new Doctor(user_email,user_name,user_type);
+                        Model.instance.signUpFB(doctor,user_pass);
                     }
                     if (user_type.equals("Patient")){
-                        user = new Patient(user_email,user_name,user_type);
+                        Patient patient = new Patient(user_email,user_name,user_type);
+                        Model.instance.signUpFB(patient,user_pass);
                     }
-                    Model.instance.signUpFB(user,user_pass);
                     Navigation.findNavController(view).navigate(R.id.action_signUp_to_login);
                 }
 

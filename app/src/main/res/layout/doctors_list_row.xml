@@ -10,29 +10,28 @@
     app:cardBackgroundColor="#49A3B3">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_listrow_layout"
+        android:id="@+id/doctors_listrow_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:background="#C9EDFF">
 
         <TextView
-            android:id="@+id/main_title_listrow"
+            android:id="@+id/doctors_title_listrow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:fontFamily="sans-serif-black"
             android:text="TextView"
             android:textColor="#000000"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/main_img_listrow"
+            app:layout_constraintEnd_toStartOf="@+id/doctors_online_listrow"
+            app:layout_constraintStart_toEndOf="@+id/doctors_img_listrow"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/main_img_listrow"
+            android:id="@+id/doctors_img_listrow"
             android:layout_width="78dp"
             android:layout_height="75dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -41,21 +40,41 @@
             app:srcCompat="@drawable/logo" />
 
         <TextView
-            android:id="@+id/main_sub_listrow"
+            android:id="@+id/doctors_sub_listrow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="TextView"
             android:textColor="#000000"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.387"
-            app:layout_constraintStart_toEndOf="@+id/main_img_listrow"
+            app:layout_constraintEnd_toStartOf="@+id/doctors_online_listrow"
+            app:layout_constraintStart_toEndOf="@+id/doctors_img_listrow"
             app:layout_constraintTop_toBottomOf="@+id/main_title_listrow" />
+
+        <ImageView
+            android:id="@+id/doctors_online_listrow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/main_title_listrow"
+            app:srcCompat="@android:drawable/presence_online" />
+
+        <ImageView
+            android:id="@+id/doctors_busy_listrow"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/main_title_listrow"
+            app:srcCompat="@android:drawable/presence_busy" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

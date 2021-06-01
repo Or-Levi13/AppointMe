@@ -19,8 +19,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -35,21 +37,63 @@ public class FireBaseModel {
 
     public String getId(){return mAuth.getCurrentUser().getUid();}
 
-    public void getUserDetails(){
+    /*public void getUserDetails(){
         FirebaseUser user = getCurrentUser();
         if (user != null) {
-            // Name, email address, and profile photo Url
             String name = user.getDisplayName();
             String email = user.getEmail();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
-            // The user's ID, unique to the Firebase project. Do NOT use this value to
-            // authenticate with your backend server, if you have one. Use
-            // FirebaseUser.getIdToken() instead.
             String uid = user.getUid();
         }
+    }*/
+
+    public void getCurrentPatient(String patientId, Model.patientListener listener){
+        db.collection("Patients").document(patientId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            String email = doc.getString("email");
+                            String fullName = doc.getString("fullName");
+                            String id = doc.getString("id");
+                            boolean isWaiting = doc.getBoolean("isWaiting"); //*//
+                            String lastUpdate = doc.getString("lastUpdated");
+                            String type = doc.getString("type");
+                            Patient patient = new Patient(email, fullName, type);
+                            patient.setId(id);
+                            patient.setArrivalTime(lastUpdate);
+                            patient.setWaiting(false);
+
+                            listener.onComplete(patient);
+                        }
+                    }
+                });
+    }
+
+    public void getCurrentDoctor(String doctorId, Model.doctorListener listener){
+        db.collection("Doctors").document(doctorId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    String email = doc.getString("email");
+                    String fullName = doc.getString("fullName");
+                    String id = doc.getString("id");
+                    String isAvailable = doc.getString("isAvailable");
+                    String lastUpdate = doc.getString("lastUpdate");
+                    String type = doc.getString("type");
+                    Doctor doctor = new Doctor(email, fullName, type);
+                    doctor.setId(id);
+                    doctor.setAvailable("false");
+
+                    List<Patient> patientsList = (List<Patient>) doc.get("waitingPatients");
+                    doctor.setPatientList(patientsList);
+
+                    listener.onComplete(doctor);
+                }
+            }
+        });
     }
 
     public Boolean isUserExist(){
@@ -60,7 +104,7 @@ public class FireBaseModel {
         }
     }
 
-    public void signOutFromFireBase (){
+    public void signOutFromFireBase(){
         mAuth.signOut();
     }
 
@@ -104,7 +148,7 @@ public class FireBaseModel {
         });
     }
 
-    public void addUser(User user, final Model.AddUserListener listener) {
+    public void addUser(User user, final Model.onCompleteListener listener) {
         if (user.getType().equals("Doctor")){
             db.collection("Doctors").document(user.getId())
                     .set(user.toMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -194,6 +238,15 @@ public class FireBaseModel {
                 listener.onComplete(patientsList);
             }
         });
+    }
+
+    public void updateDoctor(String doctorId, Map<String,Object> map, Model.SuccessListener listener) {
+        db.collection("Doctors").document(doctorId)
+                .update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) { }
+        });
+        listener.onComplete(true);
     }
 
 }
