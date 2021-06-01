@@ -20,6 +20,10 @@ public class User {
         this.type = type;
     }
 
+    public User() {
+
+    }
+
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("id", id);

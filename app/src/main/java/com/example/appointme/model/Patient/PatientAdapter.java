@@ -37,7 +37,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
     @NonNull
     @Override
     public PatientHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.patient_main_list_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_row, parent, false);
         PatientHolder holder = new PatientHolder(view);
         return holder;
     }
@@ -86,7 +86,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
         public void bindData(Patient patient, int position){
             patientText.setText(patient.getFullName());
-            //patientSubText.setText(patient.getPrice());
+            patientSubText.setText(patient.getEmail());
             Image.setImageResource(R.drawable.logo);
             /*if (patient.getImageURL() != null) {
                 Picasso.get().load(patient.getImageURL()).placeholder(R.drawable.gamechangersimple).into(gameImage);

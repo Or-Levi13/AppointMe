@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+
+import com.example.appointme.model.Doctor.Doctor;
+import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -14,6 +17,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
@@ -57,7 +64,7 @@ public class FireBaseModel {
         mAuth.signOut();
     }
 
-    public void signUpToFireBase (User user, String password, Activity activity){
+    public void signUpToFirebase(User user, String password, Activity activity){
         mAuth.createUserWithEmailAndPassword(user.getEmail(), password)
             .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
@@ -98,32 +105,93 @@ public class FireBaseModel {
     }
 
     public void addUser(User user, final Model.AddUserListener listener) {
-        db.collection("Users").document(user.getId())
-                .set(user.toMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("TAG","User added successfully");
-                listener.onComplete();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("TAG","fail adding User");
-                listener.onComplete();
-            }
-        });
+        if (user.getType().equals("Doctor")){
+            db.collection("Doctors").document(user.getId())
+                    .set(user.toMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("TAG","Doctor added successfully");
+                    listener.onComplete();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG","fail adding Doctor");
+                    listener.onComplete();
+                }
+            });
+        }
+        if (user.getType().equals("Patient")){
+            db.collection("Patients").document(user.getId())
+                    .set(user.toMap()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("TAG","Patient added successfully");
+                    listener.onComplete();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG","fail adding Patient");
+                    listener.onComplete();
+                }
+            });
+        }
     }
 
     public void getUserType(String userId, Model.StringListener listener) {
-        db.collection("Users").document(userId).get()
+        db.collection("Doctors").document(userId).get()
             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
                     String type = doc.getString("type");
+                    if (type == null){
+                        type = "Patient";
+                    }
                     listener.onComplete(type);
                 }
+            }
+        });
+    }
+
+    public void showAllDoctors(final Model.ListListener<Doctor> listener){
+        List<Doctor> doctorList = new LinkedList<Doctor>();
+        db.collection("Doctors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty() == false) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Doctor doctor = new Doctor();
+                            doctor.fromMap(doc.getData());
+                            doctorList.add(doctor);
+                            //Log.d("TAG","game: " + game.getId());
+                        }
+                    }
+                }
+                listener.onComplete(doctorList);
+            }
+        });
+    }
+
+    public void showAllPatients(final Model.ListListener<Patient> listener){
+        List<Patient> patientsList = new LinkedList<Patient>();
+        db.collection("Patients").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult().isEmpty() == false) {
+                        for (DocumentSnapshot doc : task.getResult()) {
+                            Patient patient = new Patient();
+                            patient.fromMap(doc.getData());
+                            patientsList.add(patient);
+                            //Log.d("TAG","game: " + game.getId());
+                        }
+                    }
+                }
+                listener.onComplete(patientsList);
             }
         });
     }

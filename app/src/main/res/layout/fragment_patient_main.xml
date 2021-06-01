@@ -8,11 +8,21 @@
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/signin_layout"
+        android:id="@+id/patient_main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#C9EDFF"
         tools:context=".LoginFragment">
+
+        <ImageView
+            android:id="@+id/patients_main_logout"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_revert" />
 
         <ProgressBar
             android:id="@+id/patient_main_pb"
@@ -39,12 +49,11 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="59dp"
-            android:layout_height="63dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="16dp"
             android:src="@android:drawable/ic_menu_today"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/patients_main_logout"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 

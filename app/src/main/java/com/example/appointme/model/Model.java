@@ -2,8 +2,12 @@ package com.example.appointme.model;
 
 import android.app.Activity;
 
+import com.example.appointme.model.Doctor.Doctor;
+import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class Model {
 
@@ -23,6 +27,10 @@ public class Model {
         void onComplete(String data);
     }
 
+    public interface ListListener<T> {
+        void onComplete(List<T> List);
+    }
+
     public void setActivity(Activity activity){
         this.mActivity = activity;
     }
@@ -32,7 +40,7 @@ public class Model {
     }
 
     public void signUpFB(User user, String password) {
-        fireBase.signUpToFireBase(user,password,mActivity);
+        fireBase.signUpToFirebase(user,password,mActivity);
     }
 
     public void logInFB(String email,String password, SuccessListener listener) {
@@ -58,6 +66,14 @@ public class Model {
 
     public void getUserType(String userId, StringListener listener){
         fireBase.getUserType(userId,listener);
+    }
+
+    public void showAllDoctors(ListListener<Doctor> listener){
+        fireBase.showAllDoctors(listener);
+    }
+
+    public void showAllPatients(ListListener<Patient> listener){
+        fireBase.showAllPatients(listener);
     }
 
 

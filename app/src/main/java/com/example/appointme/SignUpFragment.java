@@ -16,7 +16,9 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.appointme.model.Doctor.Doctor;
 import com.example.appointme.model.Model;
+import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
 
 
@@ -70,7 +72,13 @@ public class SignUpFragment extends Fragment {
                 if (!user_pass.equals(user_repass)) {
                     Toast.makeText(getActivity(),"Please Re-enter the correct Password",Toast.LENGTH_SHORT).show();
                 }else{
-                    User user = new User(user_email,user_name,user_type);
+                    User user = new User();
+                    if (user_type.equals("Doctor")){
+                        user = new Doctor(user_email,user_name,user_type);
+                    }
+                    if (user_type.equals("Patient")){
+                        user = new Patient(user_email,user_name,user_type);
+                    }
                     Model.instance.signUpFB(user,user_pass);
                     Navigation.findNavController(view).navigate(R.id.action_signUp_to_login);
                 }
