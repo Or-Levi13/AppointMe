@@ -40,63 +40,6 @@ public class FireBaseModel {
 
     public String getId(){return mAuth.getCurrentUser().getUid();}
 
-    /*public void getUserDetails(){
-        FirebaseUser user = getCurrentUser();
-        if (user != null) {
-            String name = user.getDisplayName();
-            String email = user.getEmail();
-            String uid = user.getUid();
-        }
-    }*/
-
-    public void getCurrentPatient(String patientId, Model.patientListener listener){
-        db.collection("Patients").document(patientId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                            Date date = new Date();
-                            DocumentSnapshot doc = task.getResult();
-                            String email = doc.getString("email");
-                            String fullName = doc.getString("fullName");
-                            String id = doc.getString("id");
-                            boolean isWaiting = doc.getBoolean("isWaiting"); //*//
-                            String lastUpdate = formatter.format(date);
-                            String type = doc.getString("type");
-                            Patient patient = new Patient(email, fullName, type);
-                            patient.setId(id);
-                            patient.setArrivalTime(lastUpdate);
-                            patient.setWaiting(false);
-
-                            listener.onComplete(patient);
-                        }
-                    }
-                });
-    }
-
-    public void getCurrentDoctor(String doctorId, Model.doctorListener listener){
-        db.collection("Doctors").document(doctorId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    Doctor doctor = new Doctor();
-                    doctor.fromMap(doc.getData());
-                    String id = doc.getString("id");
-                    doctor.setId(id);
-                    doctor.setAvailable("false");
-
-                    List<Patient> patientsList = (List<Patient>) doc.get("waitingPatients");
-                    doctor.setPatientList(patientsList);
-
-                    listener.onComplete(doctor);
-                }
-            }
-        });
-    }
-
     public Boolean isUserExist(){
         if(mAuth.getCurrentUser() != null) {
             return true;
@@ -201,6 +144,46 @@ public class FireBaseModel {
         });
     }
 
+    public void getCurrentPatient(String patientId, Model.patientListener listener){
+        db.collection("Patients").document(patientId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    String email = doc.getString("email");
+                    String fullName = doc.getString("fullName");
+                    String type = doc.getString("type");
+                    Patient patient = new Patient(email, fullName, type);
+                    patient.setId(patientId);
+                    listener.onComplete(patient);
+                }
+            }
+        });
+    }
+
+    public void getCurrentDoctor(String doctorId, Model.doctorListener listener){
+        db.collection("Doctors").document(doctorId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    Doctor doctor = new Doctor();
+                    doctor.fromMap(doc.getData());
+                    String id = doc.getString("id");
+                    doctor.setId(id);
+                    doctor.setAvailable("false");
+
+                    List<Patient> patientsList = (List<Patient>) doc.get("waitingPatients");
+                    doctor.setPatientList(patientsList);
+
+                    listener.onComplete(doctor);
+                }
+            }
+        });
+    }
+
     public void showAllDoctors(final Model.ListListener<Doctor> listener){
         List<Doctor> doctorList = new LinkedList<Doctor>();
         db.collection("Doctors").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -260,6 +243,7 @@ public class FireBaseModel {
                     for (HashMap<String,String> map : patientsList){
                         Patient patient = new Patient(map.get("email"),map.get("fullName"),map.get("type"));
                         patient.setId(map.get("id"));
+                        patient.setArrivalTime(map.get("arrivalTime"));
                         patients.add(patient);
                     }
                     listener.onComplete(patients);
@@ -290,4 +274,12 @@ public class FireBaseModel {
         });
     }
 
+    public void updatePatient(String patientID, Map<String,Object> map, Model.SuccessListener listener) {
+        db.collection("Patients").document(patientID)
+                .update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) { }
+        });
+        listener.onComplete(true);
+    }
 }

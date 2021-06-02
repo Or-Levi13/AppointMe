@@ -24,10 +24,12 @@ import com.example.appointme.model.Model;
 import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.Patient.PatientAdapter;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +49,12 @@ public class DoctorDetailsFragment extends Fragment {
     ProgressBar pb;
     ImageView backbtn;
 
+    int i = 0;
     Map<String, Object> updateDoc;
+    Map<String, Object> updatePat;
     List<Patient> patientList = new ArrayList<>();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    Date date = new Date();
+    //SimpleDateFormat formatter1 = new SimpleDateFormat("HH:mm:ss");
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -86,13 +90,68 @@ public class DoctorDetailsFragment extends Fragment {
         addMeetingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*SimpleDateFormat sdformat = new SimpleDateFormat("HH:mm:ss");
+                try{
+                    Date date = sdformat.parse(String.valueOf(formatter1.format(new Date())));
+                    Date d1 = sdformat.parse("18:17:01");
+                    Date d2 = sdformat.parse("18:17:10");
+                    //System.out.println("The date 1 is: " + sdformat.format(d1));
+                    //.out.println("The date 2 is: " + sdformat.format(d2));
+                    if(d1.compareTo(date) > 0) {
+                        Toast.makeText(getActivity(), "Date 1 occurs after Date 2", Toast.LENGTH_SHORT).show();
+                    } else if(d1.compareTo(date) < 0) {
+                        Toast.makeText(getActivity(), "Date 1 occurs before Date 2", Toast.LENGTH_SHORT).show();
+                    } else if(d1.compareTo(date) == 0) {
+                        Toast.makeText(getActivity(), "Both dates are equal", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }*/
+
                 updateDoc = new HashMap<>();
+                updatePat = new HashMap<>();
                 patientList = new ArrayList<>();
                 String patientId = Model.instance.getUserId();
                 Model.instance.getCurrentPatient(patientId, new Model.patientListener() {
                     @Override
                     public void onComplete(Patient patient) {
-                        Model.instance.getCurrentDoctor(dr_id, new Model.doctorListener() {
+                        Model.instance.showWaitingList(dr_id, new Model.ListListener() {
+                            @Override
+                            public void onComplete(List List) {
+                                patientList = List;
+                                for (Patient pat : patientList){
+                                    if (pat.getId().equals(patientId)){
+                                        i++;
+                                    }
+                                }
+                                if (i==0){
+                                    Date date = new Date();
+                                    patient.setArrivalTime(formatter.format(date));
+                                    updatePat.put("ArrivalTime",formatter.format(date));
+                                    patientList.add(patient);
+                                    updateDoc.put("isAvailable","false");
+                                    updateDoc.put("lastUpdated", formatter.format(date));
+                                    updateDoc.put("waitingPatients", patientList);
+                                    Model.instance.updateDoctor(dr_id, updateDoc, new Model.SuccessListener() {
+                                        @Override
+                                        public void onComplete(boolean result) {
+                                            Toast.makeText(getActivity(), "Added to waiting list", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                    Model.instance.updatePatient(patientId, updatePat, new Model.SuccessListener() {
+                                        @Override
+                                        public void onComplete(boolean result) {
+                                            Toast.makeText(getActivity(), "Updated Patient", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }else{
+                                    Toast.makeText(getActivity(), "Already in waiting list", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            }
+                        });
+                        /*Model.instance.getCurrentDoctor(dr_id, new Model.doctorListener() {
                             @Override
                             public void onComplete(Doctor doctor) {
                                 patientList = doctor.getPatientList();
@@ -107,36 +166,53 @@ public class DoctorDetailsFragment extends Fragment {
                                     }
                                 });
                             }
-                        });
-
+                        });*/
                     }
                 });
             }
         });
+
         cancelBtn = view.findViewById(R.id.dr_details_cancel_btn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 updateDoc = new HashMap<>();
+                updatePat = new HashMap<>();
+                String patientId = Model.instance.getUserId();
                 Model.instance.showWaitingList(dr_id, new Model.ListListener() {
                     @Override
                     public void onComplete(List List) {
                         patientList = List;
-                        for (Patient pat : patientList){
+
+                        Iterator<Patient> iterator = patientList.iterator();
+
+                        while (iterator.hasNext()){
+                            Patient pat = iterator.next();
                             if (pat.getId().equals(patient_id)){
-                                patientList.remove(pat);
+                                iterator.remove();
+                                i=0;
+                                updatePat.put("ArrivalTime",null);
+                                updateDoc.put("waitingPatients",patientList);
+                                if (patientList.size()==0){
+                                    updateDoc.put("isAvailable","true");
+                                }
+                                Model.instance.updateDoctor(dr_id, updateDoc, new Model.SuccessListener() {
+                                    @Override
+                                    public void onComplete(boolean result) {
+                                        Toast.makeText(getActivity(), "Removed from waiting list", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                Model.instance.updatePatient(patientId, updatePat, new Model.SuccessListener() {
+                                    @Override
+                                    public void onComplete(boolean result) {
+                                        Toast.makeText(getActivity(), "Updated Patient", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                         }
-                        updateDoc.put("waitingPatients",patientList);
-                        if (patientList.size()==0){
-                            updateDoc.put("isAvailable","true");
+                        if(i!=0){
+                            Toast.makeText(getActivity(), "Not in waiting list", Toast.LENGTH_SHORT).show();
                         }
-                        Model.instance.updateDoctor(dr_id, updateDoc, new Model.SuccessListener() {
-                            @Override
-                            public void onComplete(boolean result) {
-                                Toast.makeText(getActivity(), "Removed from waiting list", Toast.LENGTH_SHORT).show();
-                            }
-                        });
                     }
                 });
             }
@@ -170,11 +246,9 @@ public class DoctorDetailsFragment extends Fragment {
                         dr_patients_rv.setAdapter(patientAdapter);
                     }
                 });
-
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
 
         return view;
     }

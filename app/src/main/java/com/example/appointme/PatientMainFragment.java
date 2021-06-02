@@ -39,11 +39,6 @@ public class PatientMainFragment extends Fragment {
     ProgressBar pb;
     ImageView logout;
 
-    Map<String, Object> updateDoc;
-    List<Patient> patientList;
-    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    Date date = new Date();
-
     SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -86,32 +81,6 @@ public class PatientMainFragment extends Fragment {
                 PatientMainFragmentDirections.ActionPatientMainToDoctorDetails action = PatientMainFragmentDirections
                         .actionPatientMainToDoctorDetails(doctor.getFullName(),doctor.getEmail(),doctor.isAvailable(),doctor.getId());
                 Navigation.findNavController(view).navigate(action);
-                /*doctor.setAvailable("false");
-                updateDoc = new HashMap<>();
-                patientList = new ArrayList<>();
-                String patientId = Model.instance.getUserId();
-                Model.instance.getCurrentPatient(patientId, new Model.patientListener() {
-                    @Override
-                    public void onComplete(Patient patient) {
-                        Model.instance.getCurrentDoctor(doctor.getId(), new Model.doctorListener() {
-                            @Override
-                            public void onComplete(Doctor doctor) {
-                                patientList = doctor.getPatientList();
-                                patientList.add(patient);
-                                updateDoc.put("isAvailable","false");
-                                updateDoc.put("lastUpdated", formatter.format(date));
-                                updateDoc.put("waitingPatients", patientList);
-                                Model.instance.updateDoctor(doctor.getId(), updateDoc, new Model.SuccessListener() {
-                                    @Override
-                                    public void onComplete(boolean result) {
-                                        Toast.makeText(getActivity(), "Doctor updated", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        });
-
-                    }
-                });*/
             }
         });
 
@@ -135,7 +104,6 @@ public class PatientMainFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
 
         return view;
     }

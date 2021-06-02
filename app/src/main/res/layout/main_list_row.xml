@@ -41,7 +41,7 @@
             app:srcCompat="@drawable/logo" />
 
         <TextView
-            android:id="@+id/main_sub_listrow"
+            android:id="@+id/main_time_listrow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -53,9 +53,9 @@
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.387"
             app:layout_constraintStart_toEndOf="@+id/main_img_listrow"
             app:layout_constraintTop_toBottomOf="@+id/main_title_listrow" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

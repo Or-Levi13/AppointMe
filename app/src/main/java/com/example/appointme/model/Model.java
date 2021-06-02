@@ -109,4 +109,8 @@ public class Model {
         fireBase.cancelAppointment(doctorID,patientID, listener);
     }
 
+    public void updatePatient(String patientID, Map<String,Object> map, Model.SuccessListener listener){
+        fireBase.updatePatient(patientID,map,listener);
+    }
+
 }

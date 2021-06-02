@@ -40,6 +40,7 @@ public class Patient extends User {
         result.put("email", getEmail());
         result.put("type", getType());
         result.put("lastUpdated", formatter.format(date));
+        result.put("ArrivalTime",getArrivalTime());
         result.put("isWaiting", isWaiting());
         return result;
     }
@@ -49,6 +50,8 @@ public class Patient extends User {
         fullName = (String)map.get("fullName");
         email = (String)map.get("email");
         type = (String)map.get("type");
+        arrivalTime = (String)map.get("ArrivalTime");
+        isWaiting = (boolean) map.get("isWaiting");
     }
 
     @Override

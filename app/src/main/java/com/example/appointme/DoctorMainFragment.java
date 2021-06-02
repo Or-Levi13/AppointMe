@@ -32,6 +32,7 @@ public class DoctorMainFragment extends Fragment {
     List<Patient> patients = new ArrayList<>();
     ProgressBar pb;
     ImageView logout;
+    String dr_id;
 
     SwipeRefreshLayout swipeRefreshLayout;
 
@@ -60,7 +61,8 @@ public class DoctorMainFragment extends Fragment {
             }
         });
 
-        Model.instance.showAllPatients(new Model.ListListener<Patient>() {
+        dr_id = Model.instance.getUserId();
+        Model.instance.showWaitingList(dr_id,new Model.ListListener<Patient>() {
             @Override
             public void onComplete(List<Patient> patientsList) {
                 patients = patientsList;
@@ -78,18 +80,17 @@ public class DoctorMainFragment extends Fragment {
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                Model.instance.showAllPatients(new Model.ListListener<Patient>() {
+                Model.instance.showWaitingList(dr_id,new Model.ListListener<Patient>() {
                     @Override
-                    public void onComplete(List<Patient> patientList) {
-                        patientAdapter.setPatientsData(patientList);
-                        doctors_rv.setAdapter(patientAdapter);
+                    public void onComplete(List<Patient> patientsList) {
+                        patients = patientsList;
+                        patientAdapter.setPatientsData(patients);
+                        pb.setVisibility(View.INVISIBLE);
                     }
                 });
-
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
-
 
         return view;
     }

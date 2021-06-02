@@ -63,7 +63,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
     public static class PatientHolder extends RecyclerView.ViewHolder{
         TextView patientText;
-        TextView patientSubText;
+        TextView patientTimeText;
         ImageView Image;
         int position;
 
@@ -71,7 +71,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
             super(itemView);
             Image = itemView.findViewById(R.id.main_img_listrow);
             patientText = itemView.findViewById(R.id.main_title_listrow);
-            patientSubText = itemView.findViewById(R.id.main_sub_listrow);
+            patientTimeText = itemView.findViewById(R.id.main_time_listrow);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,11 +86,8 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
 
         public void bindData(Patient patient, int position){
             patientText.setText(patient.getFullName());
-            patientSubText.setText(patient.getEmail());
+            patientTimeText.setText(patient.getArrivalTime());
             Image.setImageResource(R.drawable.logo);
-            /*if (patient.getImageURL() != null) {
-                Picasso.get().load(patient.getImageURL()).placeholder(R.drawable.gamechangersimple).into(gameImage);
-            }*/
 
             this.position = position;
         }
