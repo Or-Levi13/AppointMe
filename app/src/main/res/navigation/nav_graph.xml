@@ -37,6 +37,28 @@
         android:id="@+id/patientMainFragment"
         android:name="com.example.appointme.PatientMainFragment"
         android:label="fragment_patient_main"
-        tools:layout="@layout/fragment_patient_main" />
+        tools:layout="@layout/fragment_patient_main" >
+        <action
+            android:id="@+id/action_patientMain_to_doctorDetails"
+            app:destination="@id/doctorDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/doctorDetailsFragment"
+        android:name="com.example.appointme.DoctorDetailsFragment"
+        android:label="fragment_doctor_details"
+        tools:layout="@layout/fragment_doctor_details" >
+        <argument
+            android:name="DrName"
+            app:argType="string" />
+        <argument
+            android:name="DrEmail"
+            app:argType="string" />
+        <argument
+            android:name="DrAvailable"
+            app:argType="string" />
+        <argument
+            android:name="DrId"
+            app:argType="string" />
+    </fragment>
 </navigation>
 

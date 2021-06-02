@@ -22,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -81,13 +82,9 @@ public class FireBaseModel {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
-                    String email = doc.getString("email");
-                    String fullName = doc.getString("fullName");
+                    Doctor doctor = new Doctor();
+                    doctor.fromMap(doc.getData());
                     String id = doc.getString("id");
-                    String isAvailable = doc.getString("isAvailable");
-                    String lastUpdate = doc.getString("lastUpdate");
-                    String type = doc.getString("type");
-                    Doctor doctor = new Doctor(email, fullName, type);
                     doctor.setId(id);
                     doctor.setAvailable("false");
 
@@ -249,6 +246,48 @@ public class FireBaseModel {
             public void onSuccess(Void aVoid) { }
         });
         listener.onComplete(true);
+    }
+
+    public void showWaitingList(String doctorId, Model.ListListener listener){
+        db.collection("Doctors").document(doctorId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    List<Patient> patients = new ArrayList<>();
+                    List<HashMap<String,String>> patientsList = (List<HashMap<String, String>>) doc.get("waitingPatients");
+                    for (HashMap<String,String> map : patientsList){
+                        Patient patient = new Patient(map.get("email"),map.get("fullName"),map.get("type"));
+                        patient.setId(map.get("id"));
+                        patients.add(patient);
+                    }
+                    listener.onComplete(patients);
+                }
+            }
+        });
+    }
+
+    public void cancelAppointment(String doctorId, String patientId, Model.ListListener listener){
+        db.collection("Doctors").document(doctorId)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot doc = task.getResult();
+                    List<Patient> patients = new ArrayList<>();
+                    List<HashMap<String,String>> patientsList = (List<HashMap<String, String>>) doc.get("waitingPatients");
+                    for (HashMap<String,String> map : patientsList){
+                        Patient patient = new Patient(map.get("email"),map.get("fullName"),map.get("type"));
+                        if (patientId != map.get("id")){
+                            patient.setId(map.get("id"));
+                            patients.add(patient);
+                        }
+                    }
+                    listener.onComplete(patients);
+                }
+            }
+        });
     }
 
 }

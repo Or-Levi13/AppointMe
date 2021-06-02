@@ -34,7 +34,6 @@ public class PatientMainFragment extends Fragment {
 
     View view;
     public RecyclerView patients_rv;
-    Button addMeetingBtn;
     DoctorAdapter doctorAdapter;
     List<Doctor> doctors = new ArrayList<>();
     ProgressBar pb;
@@ -84,7 +83,10 @@ public class PatientMainFragment extends Fragment {
         doctorAdapter.setOnItemClickListener(new DoctorAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Doctor doctor, View view) {
-                doctor.setAvailable("false");
+                PatientMainFragmentDirections.ActionPatientMainToDoctorDetails action = PatientMainFragmentDirections
+                        .actionPatientMainToDoctorDetails(doctor.getFullName(),doctor.getEmail(),doctor.isAvailable(),doctor.getId());
+                Navigation.findNavController(view).navigate(action);
+                /*doctor.setAvailable("false");
                 updateDoc = new HashMap<>();
                 patientList = new ArrayList<>();
                 String patientId = Model.instance.getUserId();
@@ -109,7 +111,7 @@ public class PatientMainFragment extends Fragment {
                         });
 
                     }
-                });
+                });*/
             }
         });
 

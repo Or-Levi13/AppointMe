@@ -101,5 +101,12 @@ public class Model {
         fireBase.updateDoctor(doctorId,map,listener);
     }
 
+    public void showWaitingList(String doctorID, ListListener listener){
+        fireBase.showWaitingList(doctorID, listener);
+    }
+
+    public void cancelAppointment(String doctorID,String patientID, ListListener listener){
+        fireBase.cancelAppointment(doctorID,patientID, listener);
+    }
 
 }
