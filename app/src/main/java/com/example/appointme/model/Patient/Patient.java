@@ -17,6 +17,7 @@ public class Patient extends User {
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     Date date = new Date();
     private String arrivalTime;
+    private String enteredTime;
 
     public Patient(){
         super();
@@ -39,6 +40,7 @@ public class Patient extends User {
         result.put("lastUpdated", formatter.format(date));
         result.put("ArrivalTime",getArrivalTime());
         result.put("isWaiting", isWaiting());
+        result.put("enteredTime",getEnteredTime());
         return result;
     }
 
@@ -49,6 +51,7 @@ public class Patient extends User {
         type = (String)map.get("type");
         arrivalTime = (String)map.get("ArrivalTime");
         isWaiting = (boolean) map.get("isWaiting");
+        enteredTime = (String)map.get("enteredTime");
     }
 
     @Override
@@ -105,5 +108,13 @@ public class Patient extends User {
 
     public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
+    }
+
+    public String getEnteredTime() {
+        return enteredTime;
+    }
+
+    public void setEnteredTime(String enteredTime) {
+        this.enteredTime = enteredTime;
     }
 }

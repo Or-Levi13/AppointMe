@@ -64,6 +64,7 @@ public class DoctorDetailsFragment extends Fragment {
     int i = 0;
     Map<String, Object> updateDoc;
     Map<String, Object> updatePat;
+    Map<String, Object> updatePat2;
     List<Patient> patientList = new ArrayList<>();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
@@ -104,8 +105,7 @@ public class DoctorDetailsFragment extends Fragment {
                 updateDoc = new HashMap<>();
                 updatePat = new HashMap<>();
                 patientList = new ArrayList<>();
-                String patientId = Model.instance.getUserId();
-                Model.instance.getCurrentPatient(patientId, new Model.patientListener() {
+                Model.instance.getCurrentPatient(patient_id, new Model.patientListener() {
                     @Override
                     public void onComplete(Patient patient) {
                         Model.instance.showWaitingList(dr_id, new Model.ListListener() {
@@ -114,10 +114,10 @@ public class DoctorDetailsFragment extends Fragment {
                                 patientList = List;
                                  // checking if patient 0 is more than 5 minutes inside
                                 if (patientList.size()!=0){
-                                    String first_pat_arrive = patientList.get(0).getArrivalTime();
+                                    String first_pat_entered = patientList.get(0).getEnteredTime();
                                     Date currDate = new Date();
                                     try{
-                                        Date pat_arrive = formatter.parse(first_pat_arrive);
+                                        Date pat_arrive = formatter.parse(first_pat_entered);
                                         long timeDiff = currDate.getTime() - pat_arrive.getTime();
                                         long difference_In_Minutes
                                                 = TimeUnit
@@ -133,6 +133,7 @@ public class DoctorDetailsFragment extends Fragment {
                                             String first_pat_id = patientList.get(0).getId();
                                             patientList.remove(0);
                                             updatePat.put("ArrivalTime",null);
+                                            updatePat.put("enteredTime",null);
                                             updateDoc.put("waitingPatients", patientList);
                                             if (patientList.size() == 0){
                                                 updateDoc.put("isAvailable","true");
@@ -141,7 +142,7 @@ public class DoctorDetailsFragment extends Fragment {
                                             Model.instance.updateDoctor(dr_id, updateDoc, new Model.SuccessListener() {
                                                 @Override
                                                 public void onComplete(boolean result) {
-                                                    Toast.makeText(getActivity(), "Added to waiting list", Toast.LENGTH_SHORT).show();
+                                                    Log.d(TAG, "Updated Doctor");
                                                 }
                                             });
                                             Model.instance.updatePatient(first_pat_id, updatePat, new Model.SuccessListener() {
@@ -155,15 +156,8 @@ public class DoctorDetailsFragment extends Fragment {
                                         e.printStackTrace();
                                     }
                                 }
-                                if (patientList.size()==1){         //Patient is first, Sending notification
-                                    if (patientList.get(0).getId().equals(patient_id)){
-                                        int reqCode = 1;
-                                        Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                                        showNotification(getContext(), "AppointMe", "The doctor is ready for you!", intent, reqCode);
-                                    }
-                                }
                                 for (Patient pat : patientList){
-                                    if (pat.getId().equals(patientId)){
+                                    if (pat.getId().equals(patient_id)){
                                         i++;
                                     }
                                 }
@@ -172,6 +166,15 @@ public class DoctorDetailsFragment extends Fragment {
                                     patient.setArrivalTime(formatter.format(date));
                                     updatePat.put("ArrivalTime",formatter.format(date));
                                     patientList.add(patient);
+                                    if (patientList.size()!=0){         //Patient is first, Sending notification
+                                        if (patientList.get(0).getId().equals(patient_id)) {
+                                            int reqCode = 1;
+                                            Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                                            showNotification(getContext(), "AppointMe", "The doctor is ready for you!", intent, reqCode);
+                                            patient.setEnteredTime(formatter.format(date));
+                                            updatePat.put("enteredTime", formatter.format(date));
+                                        }
+                                    }
                                     updateDoc.put("isAvailable","false");
                                     updateDoc.put("lastUpdated", formatter.format(date));
                                     updateDoc.put("waitingPatients", patientList);
@@ -181,7 +184,7 @@ public class DoctorDetailsFragment extends Fragment {
                                             Toast.makeText(getActivity(), "Added to waiting list", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-                                    Model.instance.updatePatient(patientId, updatePat, new Model.SuccessListener() {
+                                    Model.instance.updatePatient(patient_id, updatePat, new Model.SuccessListener() {
                                         @Override
                                         public void onComplete(boolean result) {
                                             Log.d(TAG, "Updated Patient");
@@ -268,17 +271,18 @@ public class DoctorDetailsFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(true);
                 updateDoc = new HashMap<>();
                 updatePat = new HashMap<>();
+                updatePat2 = new HashMap<>();
                 Model.instance.showWaitingList(dr_id, new Model.ListListener() {
                     @Override
                     public void onComplete(List List) {
                         patientList = List;
                         // checking if patient 0 is more than 5 minutes inside
                         if (patientList.size()!=0){
-                            String first_pat_arrive = patientList.get(0).getArrivalTime();
+                            String first_pat_entered = patientList.get(0).getEnteredTime();
                             Date currDate = new Date();
                             try{
-                                Date pat_arrive = formatter.parse(first_pat_arrive);
-                                long timeDiff = currDate.getTime() - pat_arrive.getTime();
+                                Date pat_enter = formatter.parse(first_pat_entered);
+                                long timeDiff = currDate.getTime() - pat_enter.getTime();
                                 long difference_In_Minutes
                                         = TimeUnit
                                         .MILLISECONDS
@@ -293,6 +297,10 @@ public class DoctorDetailsFragment extends Fragment {
                                     String first_pat_id = patientList.get(0).getId();
                                     patientList.remove(0);
                                     updatePat.put("ArrivalTime",null);
+                                    updatePat.put("enteredTime",null);
+                                    Date date = new Date();
+                                    patientList.get(0).setEnteredTime(formatter.format(date));
+                                    updatePat2.put("enteredTime",formatter.format(date));
                                     updateDoc.put("waitingPatients", patientList);
                                     if (patientList.size() == 0){
                                         updateDoc.put("isAvailable","true");
@@ -310,12 +318,18 @@ public class DoctorDetailsFragment extends Fragment {
                                             Log.d(TAG, "Updated Patient");
                                         }
                                     });
+                                    Model.instance.updatePatient(patientList.get(0).getId(), updatePat2, new Model.SuccessListener() {
+                                        @Override
+                                        public void onComplete(boolean result) {
+                                            Log.d(TAG, "Updated Patient");
+                                        }
+                                    });
                                 }
                             } catch (ParseException e) {
                                 e.printStackTrace();
                             }
                         }
-                        if (patientList.size()==1){         //Patient is first in line, sending notification
+                        if (patientList.size()!=0){         //Patient is first in line, sending notification
                             if (patientList.get(0).getId().equals(patient_id)){
                                 int reqCode = 1;
                                 Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);

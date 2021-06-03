@@ -246,6 +246,7 @@ public class FireBaseModel {
                         Patient patient = new Patient(map.get("email"),map.get("fullName"),map.get("type"));
                         patient.setId(map.get("id"));
                         patient.setArrivalTime(map.get("arrivalTime"));
+                        patient.setEnteredTime(map.get("enteredTime"));
                         patients.add(patient);
                     }
                     listener.onComplete(patients);
