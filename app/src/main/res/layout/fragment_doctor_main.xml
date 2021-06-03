@@ -61,13 +61,13 @@
 
         <ImageView
             android:id="@+id/doctors_main_logout"
-            android:layout_width="51dp"
-            android:layout_height="49dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_revert" />
+            app:srcCompat="@drawable/signout" />
 
         <TextView
             android:id="@+id/doctor_main_text"

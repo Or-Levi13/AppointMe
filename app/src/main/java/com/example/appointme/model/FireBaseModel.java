@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 
+import com.example.appointme.DoctorDetailsFragment;
 import com.example.appointme.model.Doctor.Doctor;
 import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
@@ -252,28 +254,6 @@ public class FireBaseModel {
         });
     }
 
-    public void cancelAppointment(String doctorId, String patientId, Model.ListListener listener){
-        db.collection("Doctors").document(doctorId)
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    List<Patient> patients = new ArrayList<>();
-                    List<HashMap<String,String>> patientsList = (List<HashMap<String, String>>) doc.get("waitingPatients");
-                    for (HashMap<String,String> map : patientsList){
-                        Patient patient = new Patient(map.get("email"),map.get("fullName"),map.get("type"));
-                        if (patientId != map.get("id")){
-                            patient.setId(map.get("id"));
-                            patients.add(patient);
-                        }
-                    }
-                    listener.onComplete(patients);
-                }
-            }
-        });
-    }
-
     public void updatePatient(String patientID, Map<String,Object> map, Model.SuccessListener listener) {
         db.collection("Patients").document(patientID)
                 .update(map).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -281,5 +261,25 @@ public class FireBaseModel {
             public void onSuccess(Void aVoid) { }
         });
         listener.onComplete(true);
+    }
+
+    public void sortByAvailable(final Model.ListListener<Doctor> listener) {
+        List<Doctor> doctorList = new LinkedList<>();
+        db.collection("Doctors").orderBy("isAvailable", Query.Direction.DESCENDING).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().isEmpty() == false) {
+                                for (DocumentSnapshot doc : task.getResult()) {
+                                    Doctor doctor = new Doctor();
+                                    doctor.fromMap(doc.getData());
+                                    doctorList.add(doctor);
+                                }
+                            }
+                        }
+                        listener.onComplete(doctorList);
+                    }
+                });
     }
 }

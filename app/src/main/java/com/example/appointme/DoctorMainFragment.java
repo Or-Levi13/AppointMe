@@ -1,7 +1,9 @@
 package com.example.appointme;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +37,7 @@ public class DoctorMainFragment extends Fragment {
     String dr_id;
 
     SwipeRefreshLayout swipeRefreshLayout;
+    AlertDialog.Builder alertBuilder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,6 +51,7 @@ public class DoctorMainFragment extends Fragment {
         doctors_rv.setLayoutManager(layoutManager);
         patientAdapter = new PatientAdapter();
         doctors_rv.setAdapter(patientAdapter);
+        alertBuilder = new AlertDialog.Builder(getActivity());
 
         pb = view.findViewById(R.id.doctor_main_pb);
         pb.setVisibility(View.VISIBLE);
@@ -56,8 +60,24 @@ public class DoctorMainFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Model.instance.signOutFB();
-                Navigation.findNavController(view).popBackStack();
+                alertBuilder.setMessage("Are you sure?")
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Model.instance.signOutFB();
+                                Navigation.findNavController(view).popBackStack();
+                            }
+                        });
+                AlertDialog alert = alertBuilder.create();
+                alert.setTitle("Sign Out");
+                alert.show();
             }
         });
 

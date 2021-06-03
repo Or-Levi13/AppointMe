@@ -1,7 +1,10 @@
 package com.example.appointme;
 
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,8 +41,10 @@ public class PatientMainFragment extends Fragment {
     List<Doctor> doctors = new ArrayList<>();
     ProgressBar pb;
     ImageView logout;
+    ImageView sortBtn;
 
     SwipeRefreshLayout swipeRefreshLayout;
+    AlertDialog.Builder alertBuilder;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +58,7 @@ public class PatientMainFragment extends Fragment {
         patients_rv.setLayoutManager(layoutManager);
         doctorAdapter = new DoctorAdapter();
         patients_rv.setAdapter(doctorAdapter);
+        alertBuilder = new AlertDialog.Builder(getActivity());
 
         pb = view.findViewById(R.id.patient_main_pb);
         pb.setVisibility(View.VISIBLE);
@@ -61,8 +67,39 @@ public class PatientMainFragment extends Fragment {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Model.instance.signOutFB();
-                Navigation.findNavController(view).popBackStack();
+                alertBuilder.setMessage("Are you sure?")
+                        .setCancelable(false)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Model.instance.signOutFB();
+                                Navigation.findNavController(view).popBackStack();
+                            }
+                        });
+                AlertDialog alert = alertBuilder.create();
+                alert.setTitle("Sign Out");
+                alert.show();
+            }
+        });
+
+        sortBtn = view.findViewById(R.id.patients_main_sort);
+        sortBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Model.instance.sortByAvailable(new Model.ListListener<Doctor>() {
+                    @Override
+                    public void onComplete(List<Doctor> List) {
+                        doctors = List;
+                        doctorAdapter.setDoctorsData(doctors);
+                        pb.setVisibility(View.INVISIBLE);
+                    }
+                });
             }
         });
 

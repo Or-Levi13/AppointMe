@@ -105,12 +105,12 @@ public class Model {
         fireBase.showWaitingList(doctorID, listener);
     }
 
-    public void cancelAppointment(String doctorID,String patientID, ListListener listener){
-        fireBase.cancelAppointment(doctorID,patientID, listener);
-    }
-
     public void updatePatient(String patientID, Map<String,Object> map, Model.SuccessListener listener){
         fireBase.updatePatient(patientID,map,listener);
+    }
+
+    public void sortByAvailable(ListListener<Doctor> listListener){
+        fireBase.sortByAvailable(listListener);
     }
 
 }
