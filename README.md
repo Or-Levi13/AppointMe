@@ -8,15 +8,14 @@ If the selected doctor is unavailable, the patient will be added to their waitin
 
 If you are a doctor on AppointMe, you will be able to view your current waiting list sorted from earliest to latest patient.
 
-AppointMe is written in Java using Android Studio, based on MVC architecture and implementing Google's Cloud Firestore as its database. Every visible list in the UI is implemented by using RecyclerView in order to minimize memory usage. 
-
-A Swipe to refresh mechanism is used to send and receive updates from the DB in an elegant way.
-
 The first patient in the doctor's patients list is the patient that is currently being treated, by default each patient gets a 5 minutes appointment, which after he will be removed from the list and the next patient begin his appointment. 
 
 Doctors that have a green circle icon next to them, means that they have no current patients waiting. Once a patient schedules an appointment with the doctor, he will have a red busy icon next to him.
 
+AppointMe is written in Java using Android Studio, based on MVC architecture and implementing Google's Cloud Firestore as its database. Every visible list in the UI is implemented by using RecyclerView in order to minimize memory usage. 
+A Swipe to refresh mechanism is used to send and receive updates from the DB in an elegant way.
 All calls to the Firestore DB are asynchronous so multiple DB requests can be dealt with simultaneously.
+
 
 Made by: Or Levi 
 Levior9@gmail.com
