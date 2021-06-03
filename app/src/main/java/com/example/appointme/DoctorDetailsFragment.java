@@ -66,7 +66,6 @@ public class DoctorDetailsFragment extends Fragment {
     Map<String, Object> updatePat;
     List<Patient> patientList = new ArrayList<>();
     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-    SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
     SwipeRefreshLayout swipeRefreshLayout;
 

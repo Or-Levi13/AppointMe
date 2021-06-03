@@ -1,13 +1,10 @@
 package com.example.appointme.model.Patient;
 
 import com.example.appointme.model.User.User;
-import com.google.firebase.firestore.FieldValue;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class Patient extends User {
 

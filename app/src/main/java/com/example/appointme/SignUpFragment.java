@@ -1,25 +1,20 @@
 package com.example.appointme;
 
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.appointme.model.Doctor.Doctor;
 import com.example.appointme.model.Model;
 import com.example.appointme.model.Patient.Patient;
-import com.example.appointme.model.User.User;
 
 
 public class SignUpFragment extends Fragment {

@@ -1,37 +1,23 @@
 package com.example.appointme;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import com.example.appointme.model.Doctor.Doctor;
 import com.example.appointme.model.Doctor.DoctorAdapter;
 import com.example.appointme.model.Model;
-import com.example.appointme.model.Patient.Patient;
-import com.example.appointme.model.Patient.PatientAdapter;
-import com.example.appointme.model.User.User;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PatientMainFragment extends Fragment {
 

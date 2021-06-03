@@ -1,11 +1,9 @@
 package com.example.appointme;
 
 import android.os.Bundle;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,6 @@ public class LoginFragment extends Fragment {
 
     Button signUpBtn;
     Button signInBtn;
-    Button forgotPass;
     EditText email;
     EditText password;
 

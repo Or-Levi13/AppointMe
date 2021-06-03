@@ -1,12 +1,9 @@
 package com.example.appointme.model;
 
 import android.app.Activity;
-
 import com.example.appointme.model.Doctor.Doctor;
 import com.example.appointme.model.Patient.Patient;
 import com.example.appointme.model.User.User;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.List;
 import java.util.Map;
 
